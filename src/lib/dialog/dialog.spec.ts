@@ -1128,7 +1128,7 @@ describe('MatDialog', () => {
       it('should close the dialog when clicking on the close button', fakeAsync(() => {
         expect(overlayContainerElement.querySelectorAll('.mat-dialog-container').length).toBe(1);
 
-        (overlayContainerElement.querySelector('button[mat-dialog-close]') as HTMLElement).click();
+        (overlayContainerElement.querySelector('.close') as HTMLElement).click();
         viewContainerFixture.detectChanges();
         flush();
 
@@ -1148,10 +1148,16 @@ describe('MatDialog', () => {
         expect(button.getAttribute('aria-label')).toBeTruthy();
       }));
 
+      fit('should not have an aria-label if a button has bound text', fakeAsync(() => {
+            let button = overlayContainerElement.querySelector('.close-with-text-binding')!;
+            flush();
+            expect(button.getAttribute('aria-label')).toBeFalsy();
+          }));
+
       it('should not have an aria-label if a button has text', fakeAsync(() => {
-        let button = overlayContainerElement.querySelector('[mat-dialog-close]')!;
-        expect(button.getAttribute('aria-label')).toBeFalsy();
-      }));
+           let button = overlayContainerElement.querySelector('.close')!;
+           expect(button.getAttribute('aria-label')).toBeFalsy();
+         }));
 
       it('should allow for a user-specified aria-label on the close button', fakeAsync(() => {
         let button = overlayContainerElement.querySelector('.close-with-aria-label')!;
@@ -1164,7 +1170,7 @@ describe('MatDialog', () => {
       }));
 
       it('should override the "type" attribute of the close button', () => {
-        let button = overlayContainerElement.querySelector('button[mat-dialog-close]')!;
+        let button = overlayContainerElement.querySelector('.close')!;
 
         expect(button.getAttribute('type')).toBe('button');
       });
@@ -1507,7 +1513,8 @@ class PizzaMsg {
     <h1 mat-dialog-title>This is the title</h1>
     <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-dialog-close>Close</button>
+      <button class="close" mat-dialog-close>Close</button>
+      <button class="close-with-text-binding" mat-dialog-close>{{'Close'}}</button>
       <button class="close-without-text" mat-dialog-close></button>
       <button class="close-icon-button" mat-icon-button mat-dialog-close>exit</button>
       <button class="close-with-true" [mat-dialog-close]="true">Close and return true</button>
@@ -1519,7 +1526,8 @@ class PizzaMsg {
     </mat-dialog-actions>
   `
 })
-class ContentElementDialog {}
+class ContentElementDialog {
+}
 
 @Component({
   template: `
@@ -1527,8 +1535,8 @@ class ContentElementDialog {}
       <h1 mat-dialog-title>This is the title</h1>
       <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
       <mat-dialog-actions>
-        <button mat-dialog-close>Close</button>
-        <button class="close-without-text" mat-dialog-close></button>
+        <button class="close" mat-dialog-close>Close</button>
+        <button class="close-with-text-binding" mat-dialog-close>{{'Close'}}</button>
         <button class="close-icon-button" mat-icon-button mat-dialog-close>exit</button>
         <button class="close-with-true" [mat-dialog-close]="true">Close and return true</button>
         <button
